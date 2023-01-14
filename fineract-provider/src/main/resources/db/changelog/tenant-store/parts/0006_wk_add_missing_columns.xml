@@ -23,9 +23,13 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <preConditions onFail="WARN"/>
+
     <changeSet author="Wilfred Kigenyi" id="2" context="tenant_store_db">
-        
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="tenant-server-connections" columnName="deadlock_max_entries"/>
+            </not>
+        </preConditions>
         <addColumn tableName="tenant_server_connections">
             <column defaultValueNumeric="0" name="deadlock_max_retries" type="INT"/>
         </addColumn>
