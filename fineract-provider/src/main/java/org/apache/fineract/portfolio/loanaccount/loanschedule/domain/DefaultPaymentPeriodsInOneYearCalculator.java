@@ -30,7 +30,7 @@ public class DefaultPaymentPeriodsInOneYearCalculator implements PaymentPeriodsI
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPaymentPeriodsInOneYearCalculator.class);
 
     @Override
-    public Integer calculate(final PeriodFrequencyType repaymentFrequencyType) {
+    public Integer calculate(final PeriodFrequencyType repaymentFrequencyType, final PeriodFrequencyType interestRatePeriodMethod) {
 
         Integer paymentPeriodsInOneYear = Integer.valueOf(0);
         switch (repaymentFrequencyType) {
@@ -38,7 +38,8 @@ public class DefaultPaymentPeriodsInOneYearCalculator implements PaymentPeriodsI
                 paymentPeriodsInOneYear = Integer.valueOf(365);
             break;
             case WEEKS:
-                paymentPeriodsInOneYear = Integer.valueOf(52);
+                
+                paymentPeriodsInOneYear = determineWeeksInYear(interestRatePeriodMethod);
             break;
             case MONTHS:
                 paymentPeriodsInOneYear = Integer.valueOf(12);
@@ -103,5 +104,13 @@ public class DefaultPaymentPeriodsInOneYearCalculator implements PaymentPeriodsI
             break;
         }
         return fraction;
+    }
+
+    private Integer determineWeeksInYear(PeriodFrequencyType periodFrequencyType){
+        if(periodFrequencyType.isMonthly()){
+            return Integer.valueOf(48);
+        }else{
+            return Integer.valueOf(52);
+        }
     }
 }
